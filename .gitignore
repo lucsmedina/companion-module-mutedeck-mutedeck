@@ -1,0 +1,10 @@
+node_modules/
+/pkg
+/*.tgz
+DEBUG-*
+/.yarn
+.DS_Store
+*.log
+
+# Reference Stream Deck plugin (not part of this module)
+streamdeck-plugin-nodejs/

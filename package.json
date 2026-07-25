@@ -1,0 +1,30 @@
+{
+	"name": "mutedeck",
+	"version": "1.0.0",
+	"type": "module",
+	"main": "src/main.js",
+	"scripts": {
+		"format": "prettier -w .",
+		"format:check": "prettier --check .",
+		"check": "node scripts/validate.mjs",
+		"icons": "node scripts/generate-icons.mjs",
+		"package": "companion-module-build"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bitfocus/companion-module-mutedeck.git"
+	},
+	"engines": {
+		"node": "^22.20"
+	},
+	"dependencies": {
+		"@companion-module/base": "~2.0.4",
+		"ws": "^8.18.2"
+	},
+	"devDependencies": {
+		"@companion-module/tools": "^3.0.1",
+		"prettier": "^3.8.3"
+	},
+	"prettier": "@companion-module/tools/.prettierrc.json"
+}
