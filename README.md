@@ -1,4 +1,4 @@
-# companion-module-mutedeck
+# companion-module-mutedeck-mutedeck
 
 A [Bitfocus Companion](https://bitfocus.io/companion) module for controlling and monitoring the [MuteDeck](https://mutedeck.com) desktop application.
 
@@ -15,7 +15,8 @@ MuteDeck exposes a local WebSocket API (default `ws://localhost:3492`). This mod
 This module is built against `@companion-module/base` 2.x and requires Companion 4.3 or newer. It is plain ESM JavaScript — no build step required.
 
 ```sh
-yarn install        # or: npm install
+yarn install        # yarn 4 via corepack
+yarn check          # validate manifest and module definitions
 yarn package        # build a distributable package (.tgz) with companion-module-build
 ```
 
@@ -30,7 +31,8 @@ To load it as a developer module, point Companion's _Developer modules path_ (la
 | `src/main.js`             | Instance class (entrypoint) and MuteDeck event handling. |
 | `src/api.js`              | WebSocket connection + reconnection to MuteDeck.         |
 | `src/actions.js`          | Action definitions.                                      |
-| `src/feedbacks.js`        | Boolean feedback definitions.                            |
+| `src/feedbacks.js`        | Live icon + boolean feedback definitions.                |
+| `src/icons.js`            | Generated MuteDeck button icons (base64 PNGs).           |
 | `src/variables.js`        | Variable definitions and values.                         |
 | `src/presets.js`          | Ready-made button presets.                               |
 | `src/state.js`            | Shared state constants and label helpers.                |
@@ -39,24 +41,18 @@ To load it as a developer module, point Companion's _Developer modules path_ (la
 
 ### Continuous integration
 
-Two GitHub Actions workflows keep packaging reproducible:
+`.github/workflows/companion-module-checks.yaml` runs Bitfocus' shared [module checks](https://github.com/bitfocus/actions) on every push, the same checks the Companion module library uses.
 
-- **CI** (`.github/workflows/ci.yml`) runs on every push to `main` and on pull requests: `npm ci`, a Prettier format check, the module validation (`npm run check`), and `companion-module-build`. The packaged `.tgz` is uploaded as a build artifact.
-- **Release** (`.github/workflows/release.yml`) runs when a `v*` tag is pushed: it verifies the tag matches the `package.json` version, validates, packages, and attaches the `.tgz` to a GitHub Release.
+### Icons
 
-Both pin Node 22 and install from the committed `package-lock.json` (`npm ci`), so the package is built the same way every time.
+`src/icons.js` is generated from the MuteDeck Stream Deck plugin's icon set and committed, so building this module needs nothing outside this repository. To regenerate, place a checkout of the Stream Deck plugin at `./streamdeck-plugin-nodejs` and run `yarn icons`.
 
 ### Cutting a release
 
-1. Bump `version` in **both** `package.json` and `companion/manifest.json` (they must match — CI enforces this).
-2. Commit, then tag and push:
-   ```sh
-   git tag v1.0.1
-   git push origin main --tags
-   ```
-3. The Release workflow builds and publishes the `.tgz` on the GitHub Release.
-4. To list it in the Companion store, submit the tag at <https://developer.bitfocus.io> (My Connections → your module → Submit Version).
+1. Bump `version` in **both** `package.json` and `companion/manifest.json` (they must match — `yarn check` enforces this).
+2. Commit, tag (`git tag v1.0.1`), and push with `--tags`.
+3. Submit the version at <https://developer.bitfocus.io> (My Connections → your module → Submit Version) to list it in the Companion store.
 
 ## License
 
-MIT
+MIT — the MuteDeck name, logo and icons are trademarks of MuteDeck; the license covers the code.
